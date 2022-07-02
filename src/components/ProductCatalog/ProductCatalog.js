@@ -1,4 +1,5 @@
 // import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Spinner, Alert } from 'react-bootstrap';
 import AppPagination from 'components/AppPagination/AppPagination';
@@ -10,9 +11,10 @@ import {
   Description,
   Image,
 } from './ProductCatalog.styled';
-import { useProducts } from 'hooks';
+import { useProducts } from '../../hooks/useProducts';
 
 export default function ProductCatalog() {
+  const navigate = useNavigate();
   const { products, isLoading, activePage, error, pageCount, onPageNavigate } =
     useProducts();
   if (isLoading) {
@@ -46,7 +48,12 @@ export default function ProductCatalog() {
     <>
       <GalleryList>
         {products.map(({ thumbnail, title, description, id }) => (
-          <Card key={id}>
+          <Card
+            key={id}
+            onClick={() => {
+              navigate(`/about/${id}`);
+            }}
+          >
             <Image src={thumbnail} height="200" />
             <Thumb>
               <Title>{title}</Title>

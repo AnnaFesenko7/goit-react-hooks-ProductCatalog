@@ -1,10 +1,11 @@
+// import { useReducer } from 'react';
 import { useEffect, useState, useCallback } from 'react';
-import { getLimitProducts } from './services/productCatalog-api';
-
-import { useContext } from 'react';
-import { limitContext } from 'contexts/limitsContext';
+import { getLimitProducts } from '../services/productCatalog-api';
+import { useLimit } from './useLimit';
+import { useNavigate } from 'react-router-dom';
 
 export const useProducts = () => {
+  const navigate = useNavigate();
   const limit = useLimit();
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,14 +38,31 @@ export const useProducts = () => {
     index => {
       setActivePage(index + 1);
       setSkip(index * limit);
+      navigate(`?pageNumber=${index + 1}`);
     },
-    [limit]
+    [limit, navigate]
   );
 
   return { products, isLoading, activePage, error, pageCount, onPageNavigate };
 };
 
-export const useLimit = () => {
-  const limit = useContext(limitContext);
-  return limit;
-};
+// const action = {
+//   type: FETCH_DATA,
+//   payload: 'dsdsds',
+// };
+
+// const reducer = (state, action) => {
+//   return state;
+// };
+// export const useProducts = () => {
+//   const [{ products, isLoading, activePage, error, pageCount }, dispatch] =
+//     useReducer(reducer, {
+//       products: [],
+//       isLoading: false,
+//       activePage: 1,
+//       error: null,
+//       pageCount: 0,
+//     });
+
+//   dispatch({ type: FETCH_DATA });
+// };

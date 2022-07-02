@@ -13,3 +13,8 @@ export async function getLimitProducts(limit, skip) {
   const response = await api.get(`/products?limit=${limit}&skip=${skip}`);
   return response.data;
 }
+
+export async function getProductById(productId) {
+  const response = await api.get(`/products/${productId}`);
+  return response.data;
+}

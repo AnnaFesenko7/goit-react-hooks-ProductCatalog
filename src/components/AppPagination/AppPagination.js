@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Pagination } from 'react-bootstrap';
-import { useLimit } from '../../hooks';
+import { useLimit } from '../../hooks/useLimit';
 
 const AppPagination = ({ pageCount, activePage, onPageNavigate }) => {
   const isFirstPage = activePage === 1;
@@ -16,7 +16,11 @@ const AppPagination = ({ pageCount, activePage, onPageNavigate }) => {
         }}
       >
         {!isFirstPage && (
-          <Pagination.Prev onClick={() => onPageNavigate(activePage - 2)} />
+          <Pagination.Prev
+            onClick={() => {
+              onPageNavigate(activePage - 2);
+            }}
+          />
         )}
         {Array.from({ length: pageCount }).map((_, index) => (
           <Pagination.Item

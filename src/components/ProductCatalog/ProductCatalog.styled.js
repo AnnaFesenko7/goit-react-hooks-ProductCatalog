@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const GalleryList = styled.ul`
+width:100%;
   display: flex;
   flex-wrap: wrap;
    justify-content: center;
@@ -12,10 +13,8 @@ export const GalleryList = styled.ul`
 `;
 
 export const Card = styled.li`
-  flex-basis: calc(100% - 20px);
-  min-width: 260px;
- 
-  height:400px;
+  
+  height:350px;
     flex-basis: calc(100% / 3 - 30px);
     max-width: 274px;
   );
