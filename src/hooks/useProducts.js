@@ -1,25 +1,30 @@
 // import { useReducer } from 'react';
 import { useEffect, useState, useCallback } from 'react';
-import { getLimitProducts } from '../services/productCatalog-api';
+import {
+  getLimitProducts,
+  getSearchedProducts,
+} from '../services/productCatalog-api';
 import { useLimit } from './useLimit';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
-export const useProducts = () => {
-  const navigate = useNavigate();
+export const useProducts = (activePage, searchQuery) => {
+  // const navigate = useNavigate();
   const limit = useLimit();
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const [pageCount, setPageCount] = useState(0);
-  const [activePage, setActivePage] = useState(1);
-  const [skip, setSkip] = useState(0);
+  // const [activePage, setActivePage] = useState(1);
+  const [skip, setSkip] = useState((activePage - 1) * limit);
 
-  const fetchProducts = useCallback(async () => {
+  useEffect(() => {
+    setSkip((activePage - 1) * limit);
+  }, [activePage, limit]);
+
+  const fetchAllProducts = useCallback(async () => {
     setIsLoading(true);
-
     try {
       const data = await getLimitProducts(limit, skip);
-
       setProducts(data.products);
       setPageCount(Math.ceil(data.total / limit));
       setIsLoading(false);
@@ -31,19 +36,29 @@ export const useProducts = () => {
   }, [limit, skip]);
 
   useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+    fetchAllProducts();
+  }, [fetchAllProducts]);
 
-  const onPageNavigate = useCallback(
-    index => {
-      setActivePage(index + 1);
-      setSkip(index * limit);
-      navigate(`?pageNumber=${index + 1}`);
-    },
-    [limit, navigate]
-  );
+  const fetchSearchProducts = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      console.log(searchQuery);
+      const data = await getSearchedProducts(searchQuery, limit, skip);
+      setProducts(data.products);
+      setPageCount(Math.ceil(data.total / limit));
+      setIsLoading(false);
+    } catch (e) {
+      setError({ error: e });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [limit, searchQuery, skip]);
 
-  return { products, isLoading, activePage, error, pageCount, onPageNavigate };
+  useEffect(() => {
+    searchQuery && fetchSearchProducts();
+  }, [fetchSearchProducts, searchQuery]);
+
+  return { products, isLoading, activePage, error, pageCount };
 };
 
 // const action = {

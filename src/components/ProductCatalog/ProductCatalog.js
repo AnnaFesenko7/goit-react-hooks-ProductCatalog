@@ -1,5 +1,4 @@
-// import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Spinner, Alert } from 'react-bootstrap';
 import AppPagination from 'components/AppPagination/AppPagination';
@@ -15,8 +14,15 @@ import { useProducts } from '../../hooks/useProducts';
 
 export default function ProductCatalog() {
   const navigate = useNavigate();
-  const { products, isLoading, activePage, error, pageCount, onPageNavigate } =
-    useProducts();
+  const [params] = useSearchParams();
+  const activePage = Number(params.get('pageNumber')) || 1;
+  const searchQuery = params.get('searchQuery') || null;
+  console.log(searchQuery);
+  const { products, isLoading, error, pageCount } = useProducts(
+    activePage,
+    searchQuery
+  );
+
   if (isLoading) {
     return (
       <div
@@ -65,7 +71,7 @@ export default function ProductCatalog() {
       <AppPagination
         pageCount={pageCount}
         activePage={activePage}
-        onPageNavigate={onPageNavigate}
+        // onPageNavigate={onPageNavigate}
       />
     </>
   );

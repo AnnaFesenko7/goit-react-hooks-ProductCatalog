@@ -31,7 +31,7 @@ export const Image = styled.img`
  width: 250px;
   border-radius: 5px;
   object-fit: cover;
- transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+ 
   );
 `;
 export const Title = styled.h2`
